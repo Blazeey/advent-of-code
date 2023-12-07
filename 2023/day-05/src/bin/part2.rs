@@ -32,18 +32,17 @@ fn create_map(ranges: Vec<Range>) -> BTreeMap<i64, Range> {
 }
 
 fn get_mapped_ranges(map: &BTreeMap<i64, Range>, start: i64, end: i64) -> Vec<(i64, i64)> {
-    println!("start {:?}, end {:?}", start, end);
+    // println!("start {:?}, end {:?}", start, end);
     let left_range = map.range((Unbounded, Excluded(start))).next_back();
-    let mut range = map.range((Included(start), Included(end)));
-    let right_range = map.range((Excluded(start), Unbounded)).next();
+    let range = map.range((Included(start), Included(end)));
     let mut prev_end: i64 = start;
     let mut new_ranges: Vec<(i64, i64)> = vec![];
-    println!("{:?}, {:?}", left_range, right_range);
+    // println!("{:?}, {:?}", left_range, right_range);
     if left_range.is_some() {
         let (_, r) = left_range.unwrap();
-        println!("Previous {:?}", r);
-        let mut s = start;
-        let mut e: i64 = 0;
+        // println!("Previous {:?}", r);
+        let s: i64;
+        let e: i64;
         if start >= r.src && start < r.src + r.len {
             s = r.dst + start - r.src;
             prev_end = r.src + r.len;
@@ -55,10 +54,10 @@ fn get_mapped_ranges(map: &BTreeMap<i64, Range>, start: i64, end: i64) -> Vec<(i
             new_ranges.push((s, e));
         }
     }
-    println!("VEC {:?}", new_ranges);
+    // println!("VEC {:?}", new_ranges);
     // range.next();
     for (_, r) in range {
-        println!("{:?}", r);
+        // println!("{:?}", r);
         if prev_end < r.src - 1 {
             new_ranges.push((prev_end, r.src - 1));
         }
@@ -68,11 +67,11 @@ fn get_mapped_ranges(map: &BTreeMap<i64, Range>, start: i64, end: i64) -> Vec<(i
         }
         new_ranges.push((r.dst, e));
         prev_end = r.src + r.len;
-        println!("Range {:?}, end {:?}", r, prev_end);
+        // println!("Range {:?}, end {:?}", r, prev_end);
     }
     if prev_end <= end {
         new_ranges.push((prev_end, end));
-        println!("LAST PUSH {:?}", new_ranges.last());
+        // println!("LAST PUSH {:?}", new_ranges.last());
     }
 
     new_ranges
