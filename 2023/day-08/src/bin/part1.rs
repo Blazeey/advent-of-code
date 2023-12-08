@@ -1,3 +1,100 @@
-fn main() {
-    println!("Hello, world!");
+use std::collections::HashMap;
+
+fn split_edge(line: &String) -> (String, String, String) {
+    let r_line = &line[..line.len() - 1];
+    let start = r_line.split(" = ").next().unwrap().to_string();
+    let child: Vec<_> = r_line.split(" = (").nth(1).unwrap().split(", ").collect();
+    let left = child[0].to_string();
+    let right = child[1].to_string();
+    (start, left, right)
 }
+
+fn parse_line(content: &str) -> (String, HashMap<String, (String, String)>) {
+    let mut map: HashMap<String, (String, String)> = HashMap::new();
+    let lines = content.lines().map(String::from).collect::<Vec<String>>();
+    let path = lines[0].trim().to_owned();
+
+    let edges = &lines[2..];
+    edges.iter().for_each(|e| {
+        let edge = split_edge(e);
+        map.entry(edge.0).or_insert((edge.1, edge.2));
+    });
+
+    (path, map)
+}
+
+fn main() {
+    let file_content = include_str!("../../input1.txt");
+    let (path, map) = parse_line(file_content);
+    let mut length = 0;
+    //DVA MPA TDA AAA FJA XPA
+    let mut cur_node = "AAA".to_owned();
+    loop {
+        let c = path.chars().nth(length % path.len()).unwrap();
+        let l = map.get(&cur_node).unwrap();
+        match c {
+            'L' => cur_node = l.0.to_string(),
+            'R' => cur_node = l.1.to_string(),
+            _ => (),
+        }
+
+        length += 1;
+        if cur_node.ends_with('Z') {
+            println!("{:?}", length);
+        }
+    }
+
+    println!("{:?}", length);
+}
+
+/*
+AAA - 21389
+42778
+64167
+85556
+106945
+128334
+
+DVA - 23147
+46294
+69441
+
+MPA - 19631
+39262
+58893
+78524
+98155
+
+TDA - 12599
+25198
+37797
+50396
+62995
+75594
+88193
+100792
+
+FJA - 17873
+35746
+53619
+71492
+89365
+107238
+125111
+142984
+160857
+
+
+XPA - 20803
+41606
+62409
+83212
+104015
+124818
+145621
+166424
+187227
+208030
+228833
+
+*/
