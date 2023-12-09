@@ -71,6 +71,7 @@ fn main() {
         }
     }
 
+    //TODO: Use DP i guess?
     // This is the answer
     println!("{:?}", lcm(&[21389, 23147, 19631, 12599, 17873, 20803]));
 }
