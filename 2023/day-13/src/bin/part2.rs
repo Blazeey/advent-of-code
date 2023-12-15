@@ -83,7 +83,7 @@ fn solve_grid(grid: &Grid) -> u64 {
         let count = check_reverse(&cols, i);
         if count.1 && count.0 == 1 {
             println!("rows {:?} {:?}", i, true);
-            return (i as u64 + 1);
+            return i as u64 + 1;
         }
     }
     0

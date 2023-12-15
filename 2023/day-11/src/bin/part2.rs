@@ -3,8 +3,7 @@ use std::collections::Bound::Excluded;
 
 use std::collections::BTreeSet;
 
-fn expand_grid(grid: &mut Vec<Vec<char>>) -> (Vec<usize>, Vec<usize>) {
-    let m = grid.len();
+fn expand_grid(grid: &mut [Vec<char>]) -> (Vec<usize>, Vec<usize>) {
     let n = grid[0].len();
     let mut expanded_rows = vec![];
     let mut expanded_cols = vec![];
